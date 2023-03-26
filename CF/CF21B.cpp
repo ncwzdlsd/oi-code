@@ -1,6 +1,8 @@
 #include<bits/stdc++.h>
 using namespace std;
+
 double a1,b1,c1,a2,b2,c2;
+
 int solve() 
 {
 	if(b1||b2) 
@@ -22,6 +24,7 @@ int solve()
 	}
 	return 1;
 }
+
 int main() 
 {
 	cin>>a1>>b1>>c1>>a2>>b2>>c2;
