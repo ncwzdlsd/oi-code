@@ -1,37 +1,32 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-int gcd(int x,int y)
-{
-	return y==0?x:gcd(y,x%y);
-}
+#define int long long
 
 void exgcd(int a,int b,int &g,int &x,int &y)//g=gcd(a,b)
 {
-	if(!b) x=1,y=0;
-	else 
-		exgcd(b,a%b,g,y,x),y-=x*(a/b);
+	if(!b) x=1,y=0,g=a;
+	else exgcd(b,a%b,g,y,x),y-=x*(a/b);
+}
+
+int gcd(int a,int b)
+{
+	return (a%b==0)?b:gcd(b,a%b);
 }
 
 signed main()
 {
+	ios::sync_with_stdio(false);cin.tie(0);cout.tie(0);
 	int T;cin>>T;
 	while(T--)
 	{
-		int a,b,c,x,y,g=gcd(a,b);cin>>a>>b>>c;
-		exgcd(a,b,g,x,y);
+		int a,b,c,x,y;
+		cin>>a>>b>>c;
+		int g=__gcd(a,b);
 		if(c%g) puts("-1");
 		else
 		{
-			x*=c/g;y*=c/g;
-			int p=b/g,q=a/g,k;
-			if(x<0) k=ceil((1.0-x)/p),x+=p*k,y-=q*k;
-			else if(x>=0) k=(x-1)/p,x-=p*k,y+=q*k;
-			if(y>0)
-				cout<<((y-1)/q+1)<<' '<<x<<' '<<((y-1)%q+1)<<' '<<(x+(y-1)/q*p)<<' '<<y;
-			else//无正整数解
-				cout<<x<<' '<<(y+q*ceil((1.0-y)/q));
-			puts("");
+			exgcd(a,b,g,x,y);
+			
 		}
 	}
 	return 0;
