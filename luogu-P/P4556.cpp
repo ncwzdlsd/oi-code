@@ -1,30 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int maxn=2e5+5,mxr=1e5;
-int head[maxn],nxt[maxn],to[maxn],f[maxn][25],cnt,dep[maxn];
+const int maxn=2e5+5,mxr=1e5,maxm=1e7+5;
+int head[maxn],nxt[maxn],to[maxn],f[maxn][25],cnt,dep[maxn],rot[maxn],ans[maxn];
 
-struct node{int ls,rs,sum,mx;}t[maxn];
+struct node{int ls,rs,sum,mx;}t[maxm];
 
 void add(int x,int y){to[++cnt]=y;nxt[cnt]=head[x];head[x]=cnt;}
-
-void pushup(int x)
-{
-	if(!t[x].ls){t[x].sum=t[t[x].rs].sum,t[x].mx=t[t[x].rs].mx;return;}
-	if(!t[x].rs){t[x].sum=t[t[x].ls].sum,t[x].mx=t[t[x].ls].mx;return;}
-	if(t[t[x].ls].sum>=t[t[x].rs].sum) t[x].sum=t[t[x].ls].sum,t[x].mx=t[t[x].ls].mx;
-	else t[x].sum=t[t[x].rs].sum,t[x].mx=t[t[x].rs].mx;
-}
-
-int merge(int p,int q,int l,int r)
-{
-	if(!p||!q) return p+q;
-	if(l==r) {t[p].sum+=t[q].sum;return p;}
-	int mid=(l+r)/2;
-	t[p].ls=merge(t[p].ls,t[q].ls,l,mid),t[p].rs=merge(t[p].rs,t[q].rs,mid+1,r);
-	pushup(p);
-	return p;
-}
 
 void dfs(int x,int fa)
 {
@@ -39,18 +21,6 @@ void dfs(int x,int fa)
 	}
 }
 
-int tot;
-
-void update(int &rt,int l,int r,int x,int v)
-{
-	if(!rt) rt=++tot;
-	if(l==r) {t[rt].sum+=v,t[rt].mx=x;return;}
-	int mid=(l+r)/2;
-	if(x<=mid) update(t[rt].ls,l,mid,x,v);
-	else update(t[rt].rs,mid+1,r,x,v);
-	pushup(rt);
-}
-
 int lca(int x,int y)
 {
 	if(dep[x]<dep[y]) swap(x,y);
@@ -60,7 +30,32 @@ int lca(int x,int y)
 	return f[x][0];
 }
 
-int rot[maxn],ans[maxn];
+void pushup(int k)
+{
+	if(t[t[k].ls].mx>=t[t[k].rs].mx)
+        t[k].mx=t[t[k].ls].mx,t[k].sum=t[t[k].ls].sum;
+    else if(t[t[k].ls].mx<t[t[k].rs].mx)
+        t[k].mx=t[t[k].rs].mx,t[k].sum=t[t[k].rs].sum;
+}
+
+void update(int &rt,int l,int r,int x,int v)
+{
+	if(!rt) rt=++cnt;
+	if(l==r) {t[rt].mx+=v,t[rt].sum=x;return;}
+	int mid=(l+r)/2;
+	if(x<=mid) update(t[rt].ls,l,mid,x,v);
+	else update(t[rt].rs,mid+1,r,x,v);
+	pushup(rt);
+}
+
+void merge(int &p,int q,int l,int r)
+{
+	if(!p||!q) {p=p+q;return;}
+	if(l==r) {t[p].mx+=t[q].mx;return;}
+	int mid=(l+r)/2;
+	merge(t[p].ls,t[q].ls,l,mid),merge(t[p].rs,t[q].rs,mid+1,r);
+	pushup(p);
+}
 
 void calc(int x,int fa)
 {
@@ -68,10 +63,9 @@ void calc(int x,int fa)
 	{
 		if(to[i]==fa) continue;
 		calc(to[i],x);
-		rot[x]=merge(rot[x],rot[to[i]],1,mxr);
+		merge(rot[x],rot[to[i]],1,mxr);
 	}
-	ans[x]=t[rot[x]].mx;
-	if(!t[rot[x]].sum) ans[x]=0;
+	if(t[rot[x]].mx>0) ans[x]=t[rot[x]].sum;
 }
 
 int main()
@@ -81,7 +75,8 @@ int main()
 	{
 		int a,b;cin>>a>>b;
 		add(a,b);add(b,a);
-	}
+	} 
+	cnt=0;
 	dfs(1,0);
 	while(m--)
 	{
