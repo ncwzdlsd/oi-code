@@ -2,9 +2,11 @@
 using namespace std;
 #define ll long long
 #define inf 0x3f3f3f3f
+
 const int Maxn=2e6+5;
 int n,a[Maxn],mx,L[Maxn],R[Maxn],C[Maxn];
 ll ans;
+
 signed main() 
 {
     cin>>n;
