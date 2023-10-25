@@ -1,13 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void solve(int l,int r)
+double dis(int a,int b)
 {
 	
 }
 
 int main()
 {
-	int 
+	int n;cin>>n;
+	for(int i=1;i<=n;i++)
 	return 0;
 }
