@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define long long ll;
+typedef long long ll;
 
 const int maxm=4e6+5,maxn=5e5+5;
 int head[maxn],cnt=1,n,m,s,t,r[maxn],now[maxn],m1,m2,c1,c2,p,tot,ss;
@@ -17,7 +17,7 @@ inline int read()
 	return x*f;
 }
 
-inline void add(int x,int y,ll z,ll q){e[++cnt]={y,head[x],z,q},head[x]=cnt;e[++cnt]={x,head[y],0,-q},head[y]=cnt;}
+inline void add(int x,int y,ll z,ll q){e[++cnt]={y,head[x],z,q},head[x]=cnt;}
 
 inline bool spfa()
 {
@@ -39,7 +39,7 @@ inline bool spfa()
 					(dis[e[i].to]<=dis[q.front()])?q.push_front(e[i].to):q.push_back(e[i].to),vis[e[i].to]=1,ss+=dis[e[i].to],tot++;
 			}
 	}
-	return dis[t]^(ll)1e18;
+	return dis[t]!=1e18;
 }
 
 inline ll dfs(int x,ll mxf)
@@ -54,7 +54,6 @@ inline ll dfs(int x,ll mxf)
 		{
 			ll ff=dfs(e[i].to,min(mxf-sum,e[i].c));
 			if(ff) e[i].c-=ff,e[i^1].c+=ff,sum+=ff,minc+=ff*e[i].w;
-			else dis[e[i].to]=1e18;
 		}
 		if(sum==mxf) break;
 	}
@@ -65,16 +64,16 @@ inline ll dfs(int x,ll mxf)
 signed main()
 {
 	// ios::sync_with_stdio(false);cin.tie(0);cout.tie(0);
-	cin>>n>>m1>>m2>>c1>>c2>>p;
-	t=2*n+1;
+	cin>>n>>m1>>m2>>p>>c1>>c2;
+	t=2*n+1,m1++,m2++;
 	int i;
-	for(i=1;i<=n;++i) r[i]=read(),add(0,i,r[i],0),add(i+n,t,r[i],0);
+	for(i=1;i<=n;++i) r[i]=read(),add(0,i,r[i],0),add(i,0,0,0),add(i+n,t,r[i],0),add(t,i+n,0,0);
 	for(i=1;i<=n;++i)
 	{
-		add(0,i+n,1e18,p);
-		if(i+1<=n) add(i,i+1,1e18,0);
-		if(i+m1<=n) add(i,i+m1+n,1e18,c1);
-		if(i+m2<=n) add(i,i+m2+n,1e18,c2);
+		add(0,i+n,1e18,p),add(i+n,0,0,-p);
+		if(i+1<=n) add(i,i+1,1e18,0),add(i+1,i,0,0);
+		if(i+m1<=n) add(i,i+m1+n,1e18,c1),add(i+m1+n,i,0,-c1);
+		if(i+m2<=n) add(i,i+m2+n,1e18,c2),add(i+m2+n,i,0,-c2);
 	}
 	while(spfa()) memcpy(now,head,(t+1)*sizeof(int)),dfs(0,1e18);	
 	cout<<minc;
