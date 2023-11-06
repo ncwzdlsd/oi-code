@@ -10,21 +10,13 @@ void add(int x,int y,int z){e[++cnt]={y,head[x],z},head[x]=cnt;}
 
 void dfs(int x,int fa)
 {
-    siz[x]=1;
-    for(int i=head[x];i;i=e[i].nxt)
-    {
-        if(e[i].to==fa) continue;
-        dfs(e[i].to,x);
-        siz[x]+=siz[e[i].to];
-        ans+=e[i].w*abs(siz[e[i].to]*2-n);
-    }
+       
 }
 
 signed main()
 {
     cin>>n;
-    for(int i=1,a,b,c;i<n;i++) cin>>a>>b>>c,add(a,b,c),add(b,a,c);
+    for(int i=1,a,b;i<n;i++) cin>>a>>b,add(a,b),add(b,a);
     dfs(1,0);
-    cout<<ans;
     return 0;
 }
