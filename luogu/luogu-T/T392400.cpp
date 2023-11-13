@@ -38,29 +38,11 @@ int quickpow(int a,int b)
     return res;
 }
 
-void sub3()
-{
-    int ww=w;
-    for(int i=2;i<=ww;i++)
-        while(ww%i==0) v[++tot]=i,ww/=i;
-    int ans=1;
-    for(int i=1;i<=n;i++)
-    {
-        int pp=p[i];
-        for(int j=2;j<=n;j++) 
-        {
-            while(pp%j==0) 
-        }
-    }
-}
-
 signed main()
 {
     cin>>n>>w;
     for(int i=1;i<=n;i++) cin>>p[i];
-    int tot=0;
     if(w==1) sub1();
     else if(n<=1) sub2();
-    else sub3();
     return 0;
 }
